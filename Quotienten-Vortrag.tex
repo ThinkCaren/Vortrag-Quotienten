@@ -1,0 +1,409 @@
+\documentclass[DIV11,11pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{extarrows}
+\usepackage{tikz}\usetikzlibrary{cd}
+\usepackage{setspace}
+\usepackage{color}
+\usepackage{ifthen}
+
+
+\title{Quotienten von Schemata}
+\author{Caren Schinko}
+\date{23.\,Juli\,2015}
+
+
+\clubpenalty10000
+\widowpenalty10000
+\displaywidowpenalty=10000
+
+\addtokomafont{sectioning}{\rmfamily}
+
+
+\newtheoremstyle{Definitionen}
+  {3pt}{3pt}{\normalfont}{0pt}{\normalfont\scshape\bfseries}{:~}{0pt}{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{Aussagen}
+  {3pt}{3pt}{\normalfont\itshape}{0pt}{\normalfont\scshape\bfseries}{:~}{0pt}{\thmname{#1}\thmnumber{ #2}\thmnote{#3}}
+
+\theoremstyle{Definitionen}
+\newtheorem{Def}{Definition}[section]
+\newtheorem{Bem}[Def]{Bemerkung}
+\newtheorem{Bsp}[Def]{Beispiel}
+\theoremstyle{Aussagen}
+\newtheorem*{Beh}{Behauptung}
+\newtheorem{Thm}[Def]{Theorem}
+\newtheorem{Satz}[Def]{Satz}
+\newtheorem{Lem}[Def]{Lemma}
+
+\makeatletter\renewenvironment{proof}[1][Beweis] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\scshape#1\@addpunct{:}]\ignorespaces}{\popQED\endtrivlist\@endpefalse}\makeatother
+
+\newcommand{\coloneq}{\ensuremath{\mathrel{\mathop{\raisebox{0.5pt}{:}}}=}}
+\newcommand{\eqcolon}{\ensuremath{=\mathrel{\mathop{\raisebox{0.5pt}{:}}}}}
+
+\let\phi\varphi
+\let\epsilon\varepsilon
+
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\M}{M}
+\DeclareMathOperator{\Norm}{Norm}
+\DeclareMathOperator{\pr}{pr}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\tr}{tr}
+
+
+\renewcommand*\labelenumi{(\roman{enumi})}
+
+
+\hyphenation{Äqui-va-lenz-klas-se}
+\hyphenation{Grup-pen-ob-jekt}
+\hyphenation{Grup-pen-sche-ma-ta}
+
+
+\newcommand{\todo}{\large\textbf{\color{red}TO DO}\normalsize}
+
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Dies sind Notizen zu meinem Vortrag \textit{Quotienten von Schemata} im Seminar \textit{Einführung in die Schematheorie} im Sommersemester 2015. Es werden keine Beweise angegeben.
+\end{abstract}
+\tableofcontents
+
+
+\section{Gruppenschemata}
+Ein Gruppenschema ist ein Gruppenobjekt in der Kategorie der Schemata über einem Basisschema.
+
+\begin{Def}\label{Gruppenschema}
+Sei $S$ ein Schema.
+\begin{enumerate}
+\item Ein \textit{Gruppenschema über $S$}, oder auch \textit{$S$-Gruppenschema}, ist ein $S$-Schema $\pi\colon G\rightarrow S$ zusammen mit $S$-Morphismen
+\begin{align*}
+m\colon &G\times_{S}G\rightarrow G \text{ (Multiplikation),}\\
+i\colon &G\rightarrow G \text{ (Inversion),}\\
+e\colon &S\rightarrow G \text{ (neutrales Element),}
+\end{align*}
+sodass die folgenden Diagramme kommutieren:
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G\times_S G\times_S G \arrow{r}{m\times \id_G} \arrow{d}[swap]{\id_G\times m} 
+&G\times_S G \arrow{d}{m}\\
+G\times_S G \arrow{r}{m} &G
+\end{tikzcd},\end{center}
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G \arrow{r}[swap]{\sim}{(\pi ,\id_G)}\arrow{ddrr}{\rotatebox{150}{$=$}}\arrow{d}{\rotatebox{90}{$\sim$}}[swap]{(\id_G ,\pi)} 
+&S\times_S G \arrow{r}{e\times\id_G}
+&G\times_S G \arrow{dd}{m}\\
+G\times_S S \arrow{d}[swap]{\id_G\times e}\\
+G\times_S G \arrow{rr}{m} &&G
+\end{tikzcd},\end{center}
+und
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G \arrow{r}{\Delta_{G/S}}\arrow{dr}{\pi}\arrow{d}[swap]{\Delta_{G/S}} 
+&G\times_S G\arrow{r}{i\times\id_G} &G\times_S G\arrow{dd}{m}\\
+G\times_S G \arrow{d}[swap]{\id_G\times i} &S \arrow{dr}{e}\\
+G\times_S G \arrow{rr}{m} &&G
+\end{tikzcd},\end{center}
+wobei $\Delta_{G/S}\colon G\rightarrow G\times_S G$ der Diagonalmorphismus ist.
+\item Ein Gruppenschema wird \textit{kommutativ} genannt, falls ein Isomorphismus
+\begin{displaymath}
+s\colon G\times_S G\rightarrow G\times_S G,~(g_1,g_2)\mapsto(g_2,g_1)
+\end{displaymath}
+existiert, sodass das Diagramm
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G\times_S G \arrow{rr}{m}\arrow{dr}{s} &&G\\
+&G\times_S G \arrow{ur}{m}
+\end{tikzcd}\end{center}
+kommutiert.
+\item Seien $G_1$ und $G_2$ zwei Gruppenschemata über $S$. Ein \textit{Homomorphismus von $S$"=Gruppenschemata} ist ein Morphismus von Schemata $f\colon G_1\rightarrow G_2$ über $S$, sodass
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G_1\times_S G_1 \arrow{r}{m_1}\arrow{d}[swap]{f\times f} &G_1 \arrow{d}{f}\\
+G_2\times_S G_2 \arrow{r}{m_2} &G_2
+\end{tikzcd}\end{center}
+kommutiert. Dies impliziert, dass $f\circ e_1=e_2$ und $f\circ i_1=i_2\circ f$.
+\end{enumerate}
+\end{Def}
+
+Diese Definition erscheint umständlich. Natürlicher wäre es, ein Gruppenschema als Schema, dessen Punkte eine Gruppe formen, zu beschreiben. Dies führt zu einer äquivalenten Beschreibung von Gruppenschemata. Unter Punkten verstehen wir hier \textit{$T$-wertige Punkte}. Sei dazu $X$ ein Schema über einem Basisschema $S$. Ist $T\rightarrow S$ ein anderes $S$-Schema, so ist ein $T$-wertiger Punkt von $X$ ein Morphismus $x\colon T\rightarrow X$ von Schemata über $S$. Die Menge dieser Punkte wird mit $X(T)$ bezeichnet. 
+
+Allgemeiner sei $\mathcal{C}$ eine Kategorie (später werden wir $\mathcal{C}=\mathfrak{Sch}_S$ Schemata über einem Basisschema $S$ betrachten). Mit $\hat{\mathcal{C}}$ wird die Kategorie der kontravarianten Funktoren $\mathcal{C}\rightarrow\mathfrak{Set}$ mit Morphismen von Funktoren als Morphismen bezeichnet. Wir betrachten den kovarianten Funktor
+\begin{displaymath}
+h\colon\mathcal{C}\rightarrow\hat{\mathcal{C}},~X\mapsto h_X\coloneq\Hom_{\mathcal{C}}(\,\cdot\, ,X).
+\end{displaymath}
+Nach dem Yoneda-Lemma ist dieser Funktor volltreu. Wir definieren nun ein Gruppenobjekt in der Kategorie $\mathcal{C}$ mithilfe seiner Einbettung in $\hat{\mathcal{C}}$. Ist $X$ ein Objekt in $\mathcal{C}$, so definieren wir eine $\mathcal{C}$-Gruppenstruktur auf $X$ als den Lift des Funktors $h_X\colon\mathcal{C}\rightarrow\mathfrak{Set}$ zum Funktor $h_X\colon\mathcal{C}\rightarrow\mathfrak{Grp}$. Genauer, um eine Gruppenstruktur auf dem Objekt $X$ anzugeben, müssen wir für jedes Objekt $T$ in $\mathcal{C}$ eine Gruppenstruktur auf der Menge $h_X(T)$ angeben, sodass für jeden Morphismus $f\colon T_1\rightarrow T_2$ die induzierte Abbildung $h_X(f)\colon h_X(T_2)\rightarrow h_X(T_1)$ ein Gruppenhomomorphismus ist. Ein Objekt $X\in\mathcal{C}$ zusammen mit so einer $\mathcal{C}$-Gruppenstruktur wird \textit{$\mathcal{C}$-Gruppe} oder \textit{Gruppenobjekt in $\mathcal{C}$} genannt. Analog kann man Ringobjekte und ähnliches in $\mathcal{C}$ definieren.
+
+Sei nun $\mathcal{C}$ eine Kategorie mit endlichen Produkten (das heißt $\mathcal{C}$ hat terminales Objekt (leeres Produkt) und für alle $X,Y\in\mathcal{C}$ existiert $X\times Y$). Ist $G$ ein Gruppenobjekt in $\mathcal{C}$, so ist die Gruppenstruktur auf $h_G$ durch einem Morphismus von Funktoren
+\begin{displaymath}
+m\colon h_{G\times_S G}=h_G\times h_G\rightarrow h_G
+\end{displaymath}
+gegeben. Das Yoneda-Lemma besagt, dass dieser Morphismus von einem eindeutigen Morphismus $m_G\colon G\times_S G\rightarrow G$ induziert wird. Analog bekommt man Morphismen $i_G\colon G\rightarrow G$ und $e_G\colon S\rightarrow G$. Diese Morphismen erfüllen die in Definition~\ref{Gruppenschema}(i) geforderten Eigenschaften. Umgekehrt induzieren Morphismen $m_G$, $i_G$ und $e_G$, welche diese Eigenschaften erfüllen, eine $\mathcal{C}$-Gruppenstruktur auf $G$.
+
+Im Fall $\mathcal{C}=\mathfrak{Sch}_S$, der Kategorie der Schemata über $S$, welche endliche Produkte hat und $S$ als terminales Objekt, gilt nun, dass ein Gruppenschema $G$ über $S$ das gleiche ist, wie ein repräsentierbarer Funktor in $\mathfrak{Sch}_S$ zusammen mit dem repräsentierenden Objekt $G$. Diese Äquivalenz wird in folgendem Satz festgehalten.
+
+\begin{Satz}
+Sei $G$ ein Schema über einem Basisschema $S$. Folgende Aussagen sind äquivalent:
+\begin{enumerate}
+\item $G$ ist ein $S$-Gruppenschema im Sinne von Definition~\ref{Gruppenschema}(i);
+\item die Mengen $G(T)$ tragen eine Gruppenstruktur, welche funktoriell in $T\in\mathfrak{Sch}_S$ ist.
+\end{enumerate}
+Sind $G_1$ und $G_2$ $S$-Gruppenschemata, so sind folgende Aussagen äquivalent:
+\begin{enumerate}
+\item $f\colon G_1\rightarrow G_2$ ist ein Homomorphismus von $S$-Gruppenschemata im Sinne von Definition~\ref{Gruppenschema}(iii);
+\item $f(T)\colon G_1(T)\rightarrow G_2(T)$ sind Gruppenhomomorphismen funktoriell in $T\in\mathfrak{Sch}_S$.
+\end{enumerate}
+\end{Satz}
+
+Im Folgenden wird das Gruppenschema $G$ mit dem Punktefunktor $h_G$ identifiziert, beides wird mit $G$ bezeichnet.
+
+\begin{Def}
+Sei $G$ ein Gruppenschema über $S$. Ein (offenes/abgeschlossenes) Unterschema $H\subseteq G$ heißt \textit{(offenes/abgeschlossenes) $S$-Untergruppenschema} von $G$, falls $h_H$ ein Untergruppenfunktor von $h_G$ ist, das heißt $H(T)\subseteq G(T)$ ist eine Untergruppe für alle $T\in\mathfrak{Sch}_S$. 
+
+Ein Untergruppenschema $H\subseteq G$ heißt \textit{normal} in $G$, falls $H(T)$ normale Untergruppe von $G(T)$ für alle $S$-Schemata $T$ ist.
+\end{Def}
+
+Im Folgenden trägt ein $S$-Untergruppenschema $H\subseteq G$ die von $G$ induzierte Struktur eines $S$-Gruppenschemas.
+
+\begin{Bsp}\label{BspGruppenschema}
+\begin{enumerate}
+\item \textit{Multiplikative Gruppe}: Dieses Gruppenschema, bezeichnet mit $\mathbb{G}_{m,S}$, repräsentiert den Funktor, der $S$-Schemata $T$ der multiplikativen Gruppe $\Gamma(T,\mathcal{O}_T)^*$ zuordnet. Es gilt $\mathbb{G}_m=\Spec(\mathcal{O}_S\left[x,x^{-1}\right])$. Die Gruppenstruktur ist gegeben durch
+\begin{align*}
+x\mapsto x\otimes x &\text{ (Multiplikation)}\\
+x\mapsto x^{-1} &\text{ (Inversion)}\\
+x\mapsto 1 &\text{ (neutrales Element)}
+\end{align*}
+\item \textit{$n$-te Einheitswurzeln}: Sei $n\in\mathbb{N}^*$. Das $S$-Gruppenschema $\mu_{n,S}$ ordnet dem $S$-Schema $T$ die Untergruppe von Elementen aus $\mathbb{G}_m(T)$ zu, deren Ordnung $n$ teilen. Das Gruppenschema wird von der $\mathcal{O}_S$-Algebra $\mathcal{O}_S\left[x,x^{-1}\right]/(x^n-1)$ definiert. In anderen Worten ist $\mu_{n,S}$ ein abgeschlossenes Untergruppenschema von $\mathbb{G}_{m,S}$.
+\end{enumerate}
+\end{Bsp}
+
+Nun ist es möglich Konstruktionen aus der Kategorie $\mathfrak{Grp}$ auf diese Gruppenobjekte in der Kategorie $\mathfrak{Sch}_S$ zu übertragen. Im Folgenden werden Kerne von Homomorphismen, sowie Gruppenoperationen auf den Gruppenobjekten definiert.
+
+\begin{Def}\label{Kern}
+Sei $f\colon G_1\rightarrow G_2$ ein Homomorphismus von $S$-Gruppenschemata. Der \textit{Kern von $f$} ist definiert durch das Untergruppenschema $\ker(f)\coloneq f^{-1}\left(e_{G_2}(S)\right)$ von $G$, wobei $\left(e_{G_2}(S)\right)$, das Bild der Immersion $e_{G_2}\colon S\rightarrow G_2$, selbst ein Unterschema von $G_2$ ist.
+\end{Def}
+
+\begin{Bem}
+Mithilfe des Pullback-Diagramm
+\begin{center}\begin{tikzcd}
+\ker(f) \arrow[hook]{r}\arrow{d} &G_1 \arrow{d}{f}\\
+S \arrow{r}{e} &G_2
+\end{tikzcd}.\end{center}
+sieht man, dass $\ker(f)$ den kontravarianten Funktor
+\begin{displaymath}
+\mathfrak{Sch}_S\rightarrow\mathfrak{Grp},~T\mapsto\ker\left(f(T)\colon G_1(T)\rightarrow G_2(T)\right)
+\end{displaymath}
+repräsentiert. Außerdem ist $\ker(f)$ ein normales Untergruppenschema von $G$.
+\end{Bem}
+
+\begin{Def}
+Sei $G$ ein Gruppenschema über einer Basis $S$.
+\begin{enumerate}
+\item Eine \textit{(Links-)Operation von $G$ auf das $S$-Schema $X$} ist gegeben durch einen Morphismus
+\begin{displaymath}
+\rho\colon G\times_S X\rightarrow X,
+\end{displaymath}
+sodass folgende Diagramme kommutieren:
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+X \arrow{r}{=} \arrow{d}{\rotatebox{90}{$\sim$}} &X\\
+S\times_S X \arrow{r}{e_G\times\id_X} &G\times_S X \arrow{u}[swap]{\rho}
+\end{tikzcd}\end{center}
+und
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G\times_S G\times_S X \arrow{r}{\id_G\times\rho} \arrow{d}[swap]{m\times\id_X} 
+&G\times_S X \arrow{d}{\rho}\\
+G\times_S X \arrow{r}{\rho} &X
+\end{tikzcd}.\end{center}
+In anderen Worten: Für jedes $S$-Schema $T$ induziert der Morphismus $\rho$ eine Linksoperation der Gruppe $G(T)$ auf der Menge $X(T)$,
+\begin{displaymath}
+G(T)\times X(T)\rightarrow X(T),~(g,x)\mapsto g\cdot x.
+\end{displaymath}
+\item Für eine Operation $\rho$ definieren wir den \textit{Graphenmorphismus}
+\begin{displaymath}
+\Psi=\Psi_{\rho}\coloneq(\rho ,\pr_2)\colon G\times_S X\rightarrow X\times_S X.
+\end{displaymath}
+Auf Punkten ist dies gegeben durch $(g,x)\mapsto (g\cdot x,x)$. Die Operation $\rho$ wird \textit{frei} oder \textit{Mengen-theoretisch frei} genannt, falls $\Psi$ ein Monomorphismus von Schemata ist. Sie wird \textit{strikt frei} oder \textit{Schema-theoretisch frei} genannt, falls $\Psi$ Immersion ist.
+\item Sei $T\in\mathfrak{Sch}_S$ und $x\in X(T)$. $G_x$, der \textit{Stabilisator von $x$} ist das Untergruppenschema von $G_T\coloneq G\times_S T$, das den Funktor $T'\mapsto\{g\in G(T')\mid g\cdot x=x\}$ auf $T$-Schemata $T'$ repräsentiert.
+\end{enumerate}
+\end{Def}
+
+\begin{Bem}\label{BemOp}
+\begin{enumerate}
+\item Die Operation $\rho$ ist genau dann frei, wenn für alle $T$ und für alle $x\in X(T)$ der Stabilisator $G_x$ trivial ist.
+\item Folgendes kommutatives Diagramm mit Pullback-Quadraten zeigt, dass der Funktor $T'\mapsto\{g\in G(T')\mid g\cdot x=x\}$ tatsächlich vom Untergruppenschema $G_x\subseteq G_T$ repräsentiert wird:
+\begin{center}\begin{tikzcd}[column sep=large,row sep=large]
+G_x \arrow[hook]{r} \arrow{d} 
+&G_T=G\times_S T \arrow{r}{\id_G\times x} \arrow{d}{\alpha_x}
+&G\times_S X \arrow{d}{\Psi}\\
+T \arrow{r}{(x,\id_T)} 
+&X_T=X\times_S T \arrow{r}{\id_X\times x} &X\times_S X
+\end{tikzcd},\end{center}
+wobei $\alpha_x =(\rho\circ(\id_G\times x),\pr_2)$ (auf Punkten: $\alpha_x(g)=g\cdot x$).
+\end{enumerate}
+\end{Bem}
+
+\begin{Bsp}
+Ist $f\colon G_1\rightarrow G_2$ ein Homomorphismus von Gruppenschemata, so operiert $G_1$ auf $G_2$ auf natürliche Weise, auf Punkten ist die Operation gegeben durch
+\begin{displaymath}
+(g_1,g_2)\mapsto f(g_1)\cdot g_2.
+\end{displaymath}
+Die Operation ist frei genau dann, wenn $\ker(f)$ trivial ist (vergleiche Bemerkung~\ref{BemOp}(ii)).
+\end{Bsp}
+
+
+\section{Kategorielle Quotienten}\label{KatQuot}
+Da nun bekannt ist wann und wie ein Gruppenschema $G$ auf einem anderen Schema $S$ operiert, stellt sich die Frage, ob es eine sinnvolle Beschreibung des Quotientenraums $G\setminus X$ gibt? Im Speziellen: Ist ein Homomorphismus von Gruppenschemata gegeben, kann der Kokern angegeben werden? Und kann für ein normales Untergruppenschema $N\subseteq G$ das Quotientenschema $G/N$ definiert werden? Leider ist die Konstruktion eines sinnvollen Kokerns nicht so einfach, wie die Konstruktion eines Kerns (vergleiche Definition~\ref{Kern}). Im Rest dieser Notizen soll nun diesen Fragen nachgegangen werden.
+
+Um die Probleme bei der Konstruktion des Kokerns zu verdeutlichen wird zunächst ein Beispiel (vergleiche Beispiel~\ref{BspGruppenschema}) gegeben.
+
+\begin{Bsp}\label{BspQuot1}
+Sei $N\ge 2$ eine ganze Zahl. Sei $f\colon\mathbb{G}_m\rightarrow\mathbb{G}_m$ Endomorphismus über $S=\Spec(\mathbb{Z})$ gegeben durch $q\mapsto q^N$ auf Punkten. Der Kern von $f$ ist gegeben durch $\mu_N$. $f$ ist ein volltreuer flacher Morphismus von Schemata und für einen algebraisch abgeschlossener Körper $k$ ist $f$ surjektiv auf $k$-rationalen Punkten (kürzere Bezeichnung für $\Spec(k)$-rationale Punkte). Deshalb würde man naiv annehmen, dass der Kokern von $f$ trivial ist, das heißt $\coker(f)=S$. Aber offensichtlich ist der Funktor $c\colon T\mapsto \mathbb{G}_m(T)/f(\mathbb{G}_m(T))$ nicht trivial (zum Beispiel ist $c(\mathbb{Q})$ keine endliche Gruppe). Mehr noch, da $c(\mathbb{Q})\neq\{1\}$, aber $c(\overline{\mathbb{Q}})=\{1\}$, ist $c$ nicht durch ein Schema repräsentierbar. Somit führen hier geometrische und funktorielle Überlegungen nicht zur gleichen Definition eines Kokerns im Gegensatz zur Definition~\ref{Kern} des Kerns.
+\end{Bsp}
+
+Im Folgenden wird nun der kategorielle Quotient allgemein in einer Kategorie $\mathcal{C}$ definiert.
+
+\begin{Def}\label{DefKatQuot}
+Sei $\mathcal{C}$ eine Kategorie mit endlichen Produkten. Seien $G$ und $X$ Objekte in $\mathcal{C}$, sei $G$ sogar ein Gruppenobjekt. Es gilt $X(T)\coloneq h_X(T)=\Hom_{\mathcal{C}}(T,X)$.
+\begin{enumerate}
+\item Eine \textit{(Links-)Operation von $G$ auf $X$} ist ein Morphismus $\rho\colon G\times X\rightarrow X$, welcher für jedes Objekt $T$ eine (Links-)Operation der Gruppe $G(T)$ auf der Menge $X(T)$ induziert.
+\item Ein Morphismus $q\colon X\rightarrow Y$ in $\mathcal{C}$ heißt \textit{$G$-invariant}, falls folgendes Diagramm kommutiert
+\begin{center}\begin{tikzcd}
+G\times X \arrow{r}{\rho}\arrow{d}{\pr_X} &X \arrow{d}{q}\\
+X \arrow{r}{q} &Y
+\end{tikzcd}.\end{center}
+Nach dem Yoneda-Lemma ist das äquivalent zur Forderung, dass für alle $T\in\mathcal{C}$ gilt, dass $q(x_1)=q(x_2)\in Y(T)$, falls $x_1,x_2\in X(T)$ im selben $G(T)$-Orbit liegen.
+\item Seien $f,g\colon W\rightrightarrows X$ zwei Morphismen in $\mathcal{C}$. Ein Morphismus $h\colon X\rightarrow Y$ wird \textit{Differenzkokern von $(f,g)$} genannt, falls gilt $h\circ f=h\circ g$ und $h$ ist universell mit dieser Eigenschaft, das heißt für alle anderen Morphismen $h'\colon X\rightarrow Y'$, die diese Eigenschaft erfüllen, existiert eindeutiger Morphismus $\alpha\colon Y\rightarrow Y'$, sodass $h'=\alpha\circ h$.
+\item Ein Morphismus $q\colon X\rightarrow Y$ wird \textit{kategorieller Quotient von $X$ und $G$} genannt, falls $q$ Differenzkokern von $(\rho,\pr_X)\colon G\times X\rightrightarrows X$ ist. In anderen Worten ist $q$ ein kategorieller Quotient, falls $q$ $G$-invariant ist und als solcher universell im Sinne von (iii) ist.
+
+Der Morphismus $q$ wird \textit{universeller kategorieller Quotient} genannt, falls für jedes Objekt $S$ in $\mathcal{C}$ der Morphismus $q_S\colon X_S\rightarrow Y_S$ ein kategorieller Quotient von $X_S$ und $G_S$ in der Kategorie $\mathcal{C}_S$ ist.
+\end{enumerate}
+\end{Def}
+
+\begin{Bem}
+Existiert ein kategorieller Quotient $q\colon X\rightarrow Y$, so ist er eindeutig bis auf eindeutige Isomorphie.
+\end{Bem}
+
+\begin{Bsp}
+Wie im Beispiel~\ref{BspQuot1} sei $S=\Spec(\mathbb{Z})$, $G=\mathbb{G}_{m,S}$ operiert auf $X=\mathbb{G}_{m,S}$ durch $\rho(g,x)=g^N\cdot x$. Ist $k=\overline{k}$, dann besteht $X(\Spec(k))$ nur aus einem einzigen Orbit unter $G(\Spec(k))$. Dies impliziert schon, dass $q\colon X\rightarrow S$ ein kategorieller Quotient von $X$ und $G$ ist. Man kann sogar zeigen, dass $q$ ein universeller kategorieller Quotient ist.
+\end{Bsp}
+
+
+\section{Geometrische Quotienten}
+Nun sollen Quotienten von einem geometrischen Standpunkt aus betrachten werden. Dazu wird zunächst ein Satz über die Existenz Quotienten unter endlichen Gruppen genannt. Dieser Resultat wird in Theorem~\ref{Theorem} verallgemeinert werden. Hier betrachten wir die Operation einer abstrakten Gruppe $\Gamma$ auf einem Schema $X$, das heißt für jedes Element $\gamma\in\Gamma$ ist ein Morphismus $\rho(\gamma)\colon X\rightarrow X$ gegeben, der die üblichen Axiome für Gruppenoperationen erfüllt.
+
+\begin{Satz}\label{ersterQuotSatz}
+Sei $\Gamma$ eine endliche (abstrakte) Gruppe, die auf $X\coloneq\Spec(A)$, einem affinen Schema, operiert. Sei $A^{\Gamma}\subseteq A$ der Unterring der $\Gamma$-invarianten Elemente, sei außerdem $Y\coloneq\Spec(A^{\Gamma})$.
+\begin{enumerate}
+\item Der natürliche Morphismus $q\colon X\rightarrow Y$ induziert einen Homöomorphismus
+\begin{displaymath}
+\Gamma\setminus\left|X\right|\xlongrightarrow{\sim}\left|Y\right|
+\end{displaymath}
+auf den zugrundeliegenden topologischen Räumen.
+\item Die Abbildung $q^{\#}\colon\mathcal{O}_Y\rightarrow q_*\mathcal{O}_X$ induziert einen Isomorphismus
+\begin{displaymath}
+\mathcal{O}_Y\xlongrightarrow{\sim}\left(q_*\mathcal{O}_X\right)^{\Gamma},
+\end{displaymath}
+wobei $\left(q_*\mathcal{O}_X\right)^{\Gamma}$ die Grabe der $\Gamma$-invarianten Schnitte von $q_*\mathcal{O}_X$ bezeichnet.
+\item Der Ring $A$ ist ganz über $A^{\Gamma}$. Der Morphismus $q$ ist quasi-endlich, abgeschlossen und surjektiv.
+\end{enumerate}
+\end{Satz}
+
+\begin{Bem}
+\begin{enumerate}
+\item Ist die Operation von $\Gamma$ auf $X$ frei oder ist $X$ von endlichem Typ über einem lokal noetherschen Basisschema $S$ und $\Gamma$ operiert mittels Automorphismus von $X$ über $S$, so ist $q$ ein endlicher Morphismus.
+\item Man kann zeigen, dass $q\colon X\rightarrow Y$ ein kategorieller Quotient von $X$ und $G$ ist. Ist $X\rightarrow S$ ein Morphismus, sodass $\Gamma$ mittels Automorphismus von $X$ über $S$ operiert, so ist $Y$ in natürlicher Weise ein $S$-Schema und $q$ ist ein kategorieller Quotient in $\mathfrak{Sch}_S$. Im allgemeinen ist $q$ aber kein universeller kategorieller Quotient.
+\end{enumerate}
+\end{Bem}
+
+Es stellt sich die Frage, ob für eine gegebene Operation eines Gruppenschemas $G$ auf einem Schema $X$ über einer Basis $S$ ein kategorieller Quotient von $X$ und $G$ in $\mathfrak{Sch}_S$ existiert, und falls ja, wie man diesen Quotienten konstruiert. Satz~\ref{ersterQuotSatz} legt den Grundstein für eine Idee zur allgemeinen Konstruktion von Quotienten. Man könnte versuchen einen Quotient aus dem topologischen Raum $\left|X\right|$ modulo der Operation von $G$ zu bilden und den entstehenden Raum mit der Garbe der $G$-invarianten Funktionen auf $X$ auszustatten.
+
+Mit andern Worten wollen wir die Kategorie der Schemata $\mathfrak{Sch}$ als volle Unterkategorie der Kategorie der lokal geringten Räume $\mathfrak{LRS}$ betrachten, welche wiederum eine (nicht volle) Unterkategorie der geringten Räume $\mathfrak{RS}$ ist. Ist $G$ ein $S$-Gruppenschema, welches auf dem $S$-Schema $X$ operiert, dann soll gezeigt werden, dass ein kategorieller Quotient $(G\setminus X)_{\text{RS}}$ in der Kategorie $\mathfrak{RS}_S$ existiert. Die Konstruktion erfolgt genau wie in Satz~\ref{ersterQuotSatz} beschrieben: Der Quotient $G\setminus\left|X\right|$ wird mit der Garbe $(q_*\mathcal{O}_X)^G$ versehen, wobei $q\colon \left|X\right|\rightarrow G\setminus\left|X\right|$ die natürliche Abbildung ist. Bleibt die Frage, ob $(G\setminus X)_{\text{RS}}$ ein Schema ist, und wenn ja, ob diese Schema ein \glqq guter\grqq{} Schema-theoretischer Quotient von $X$ modulo $G$ ist.
+
+Im Allgemeinen kann $(G\setminus X)_{\text{RS}}$ nicht als kategorieller Quotient im Sinne der Definition~\ref{DefKatQuot} gesehen werden. Der Grund hierfür ist, dass $\mathfrak{Sch}_S$ keine volle Unterkategorie von $\mathfrak{RS}_S$, damit können die Produkte in den Kategorien unterschiedlich sein. Deshalb ist es nicht klar, ob der geringte Raum $(\left|G\right|,\mathcal{O}_G)$ des $S$-Gruppenschemas $G$ auch ein Gruppenobjekt in der Kategorie $\mathfrak{RS}_S$ ist. Die Behauptung, dass $(G\setminus X)_{\text{RS}}$ ein Quotient von $X$ und $G$ ist wird dahingehend interpretiert, dass der Morphismus $q$ ein Differenzkokern von $(\rho,\pr_X)\colon G\times_S X\rightrightarrows X$ in $\mathfrak{RS}_S$ ist.
+
+Im Folgenden wird nun diese Konstruktionsidee umgesetzt, dabei ist $G$ nicht notwendigerweise endlich.
+
+\begin{Lem}
+Sei $\rho\colon G\times_S X\rightarrow X$ eine Operation des $S$-Gruppenschemas $G$ auf das $S$"~Schema $X$. Durch die stetigen Abbildungen
+\begin{displaymath}
+\left|\pr_X\right|\colon \left| G\times_S X\right|\rightarrow\left| X\right|\text{ und }\left|\rho\right|\colon\left| G\times_S X\right|\rightarrow\left| X\right|
+\end{displaymath}
+wird eine Äquivalenzrelation $\sim$ auf $\left| X\right|$ wie folgt definiert: Für $P,Q\in\left| X\right|$ gilt $P\sim Q$, wenn ein $R\in\left| G\times_S X\right|$ existiert mit $\left|\pr_X\right|(R)=P$ und $\left|\rho\right|(R)=Q$. Die Äquivalenzklassen von~$\sim$ werden als \textit{$G$-Äquivalenzklassen} in $\left| X \right|$ bezeichnet.
+\end{Lem}
+
+\begin{Def}\label{DefGeomQuot}
+Sei $\rho\colon G\times_S X\rightarrow X$ eine Operation des $S$-Gruppenschemas $G$ auf das $S$-Schema $X$. Sei $\left| X\right|/\!\sim$ die Menge der $G$-Äquivalenzklassen in $\left| X\right|$ ausgestattet mit der Quotiententopologie. $q\colon\left| X\right|\rightarrow\left| X\right|/\!\!\sim$ ist die kanonische Abbildung. Sei $V\subseteq\left| X\right|/\!\sim$ eine offene Teilmenge und $U\coloneq q^{-1}(V)$. Ist $f\in q_*\mathcal{O}_X(V)=\mathcal{O}_X(U)$, so können die Elemente $\pr_X^{\#}(f),\rho^{\#}\in\mathcal{O}_{G\times_S X}(G\times_S U)$ gebildet werden. $f$ wird als \textit{$G$-invariant} bezeichnet, falls $\pr_X^{\#}(f)=\rho^{\#}$. Die $G$-invarianten Funktionen bilden ein Unterschema $\left(q_*\mathcal{O}_X\right)^G\subseteq q_*\mathcal{O}_X$ von Ringen.
+
+Definiere
+\begin{displaymath}
+(G\setminus X)_{RS}\coloneq\left(\left| X\right|/\!\sim ,\left(q_*\mathcal{O}_X\right)^G\right)
+\end{displaymath}
+und schreibe $q\colon X\rightarrow (G\setminus X)_{RS}$ für den natürlichen Morphismus geringter Räume.
+
+Ist $(G\setminus X)_{RS}$ ein Schema und $q$ ein Morphismus von Schemata, so wird dies \textit{geometrischer Quotient von $X$ und $G$} genannt. Gilt weiter für jedes $S$-Schema $T$
+\begin{displaymath}
+(G\setminus X)_{RS}\times_S T\cong(G_T\setminus X_T)_{RS},
+\end{displaymath}
+so ist $(G\setminus X)_{RS}$ ein \textit{universeller geometrischer Quotient}.
+\end{Def}
+
+\begin{Bem}
+\begin{enumerate}
+\item Die Halme der Garbe $(G\setminus X)_{RS}$ sind nicht notwendigerweise lokale Ringe, dies ist der Grund, warum die Konstruktion in der Kategorie $\mathfrak{RS}$ durchgeführt wird.
+\item Im Allgemeinen kommutiert die Konstruktion von $(G\setminus X)_{RS}$ nicht mit Basiswechseln. Ist allerdings $U\subseteq S$ eine Zariski-offene Teilmenge so sind
+\begin{displaymath}
+(G_U\setminus X_U)_{RS}\cong(G\setminus X)_{RS}\!\mid_U
+\end{displaymath}
+kanonisch isomorph.
+\end{enumerate}
+\end{Bem}
+
+\begin{Satz}
+In der Situation von Definition~\ref{DefGeomQuot} ist $q\colon X\rightarrow (G\setminus X)_{RS}$ der Differenzkokern der Morphismen $(\rho,\pr_X)\colon G\times_S X\rightrightarrows X$ in der Kategorie $\mathfrak{RS}_S$. Existiert ein geometrischer Quotient von $X$ und $G$, so ist er auch ein kategorieller Quotient in $\mathfrak{Sch}_S$.
+\end{Satz}
+
+Das folgendes Beispiel zeigt, dass nicht jeder kategorielle Quotient in $\mathfrak{Sch}_S$ auch ein geometrischer Quotient ist.
+
+\begin{Bsp}
+Sei $k$ ein Körper, sei $\M_{2,k}$($=\mathbb{A}^4_k$) das $k$-Schema der $2\times 2$-Matrizen über $k$. Die allgemeine lineare Gruppe $\GL_{2,k}$ operiert auf $\M_{2,k}$ durch Konjugation, der zugehörige Morphismus wird mit $\rho\colon\GL_{2,k}\times\M_{2,k}\rightarrow\M_{2,k}$ bezeichnet. Betrachtet wird der Morphismus
+\begin{displaymath}
+p=(\tr,\det)\colon\M_{2,k}\rightarrow\mathbb{A}^2_k
+\end{displaymath}
+induziert von der Spur- und der Determinantenabbildung $\tr,\det\colon\M_{2,k}\rightarrow\mathbb{A}^1_k$. Offensichtlich ist $p$ ein $\GL_2$-invarianter Morphismus. $\left(\mathbb{A}^2_k,p\right)$ ist ein (universeller) kategorieller Quotient von $\M_{2,k}$ und $\GL_{2,k}$.
+
+Andererseits ist $\mathbb{A}^2_k$ kein geometrischer Quotient. Wäre das der Fall, so müsste auf dem zugrundeliegenden topologischen Raum durch die Abbildung $p$ die Menge der $\GL_{2,k}$-Orbits in $\M_{2,k}$ mit $\mathbb{A}^2_k$ identifiziert werden. Aber Spur und Determinante sind nicht in der Lage die Matrizen
+\begin{displaymath}
+\begin{pmatrix}\lambda &1\\ 0 &\lambda \end{pmatrix}
+\text{ und }
+\begin{pmatrix}\lambda &0\\ 0 &\lambda \end{pmatrix},~\lambda\in k
+\end{displaymath}
+auseinander zu halten.
+\end{Bsp}
+
+Mithilfe von folgendem Lemma kann nun Satz~\ref{ersterQuotSatz} verallgemeinert werden.
+
+\begin{Lem}
+Sei $\phi\colon A\rightarrow C$ ein Homomorphismus kommutativer Ringe, das macht $C$ zu einem projektiven $A$-Modul von Rang $r>0$. Sei $\Norm_{C/A}\colon C\rightarrow A$
+die \textit{Normabbidung}. Sei $\psi\colon\Spec(C)\rightarrow\Spec(A)$ der von $\phi$ induzierte Morphismus von Schemata. Ist $Z\subseteq\Spec(C)$ die Nullstellenort von $f\in C$, so ist $\psi(Z)\subseteq\Spec(A)$ der Nullstellenort von $\Norm_{C/A}(f)$.
+\end{Lem}
+
+\begin{Thm}\label{Theorem}
+Sei $G$ ein endliches, lokal freies $S$-Gruppenschema, das auf dem $S$"~Schema $X$ operiert. Es wird vorausgesetzt, dass für jeden abgeschossenen Punkt $P\in\left| X \right|$ die $G$"~Äqui\-valenzklasse von $P$ in einer affin-offenen Teilmenge enthalten ist.
+\begin{enumerate}
+\item Der Quotient $Y\coloneq\left(G\setminus X\right)_{RS}$ ist ein $S$-Schema und damit ein geometrischer Quotient von $X$ und $G$. Der kanonische Morphismus $q\colon X\rightarrow Y$ ist quasi-endlich, ganz, abgeschlossen und surjektiv. Ist $S$ lokal noethersch und $X$ vom endlichen Typ über $S$, so ist $q$ ein endlicher Morphismus und $Y$ ebenfalls vom endlichen Typ über $S$.
+\item Die Konstruktion des Quotienten $Y$ ist kompatibel mit flachem Basiswechsel. In anderen Worten, ist $h\colon S'\rightarrow S$ ein flacher Morphismus, so gilt $Y'\cong\left(G'\setminus X'\right)_{RS}$ mit $X'\coloneq X\times_S S'$.
+\item Operiert $G$ frei, dann ist $q\colon X\rightarrow Y$ endlich und lokal frei, außerdem ist der von $\Psi=(\rho,\pr_X)$ induzierte Morphismus $G\times_S X\rightarrow X\times_Y X$ ein Isomorphismus. Mehr noch, $Y$ ist in diesem Fall ein universeller geometrischer Quotient, das heißt für jeden Basiswechselmorphismus $h\colon S'\rightarrow S$ gilt $Y'\cong\left(G'\setminus X'\right)_{RS}$.
+\end{enumerate} 
+\end{Thm}
+
+\begin{Bem}
+\begin{enumerate}
+\item Die Bedingung, dass jede $G$-Äquivalenzklasse in einer affin"=offenen Teilmenge liegt ist erfüllt, wenn $X$ quasi-projektiv über $S$ ist.
+\item In der Situation von Theorem~\ref{Theorem} ist die freie Operation automatisch strikt frei. Die Aussage in (iii) bedeutet, dass der Graphenmorphismus $\Psi$ einen Isomorphismus von $G\times_S X$ auf das Unterschema $X\times_Y X\subseteq X\times_S X$ induziert, damit ist $\Psi$ eine Immersion.
+\end{enumerate}
+\end{Bem}
+\end{document}
